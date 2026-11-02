@@ -1,0 +1,41 @@
+.bb { display: block; padding: 2rem 0; }
+.bb__heading { margin: 0 0 .25rem; }
+.bb__sub { margin: 0 0 1.5rem; opacity: .8; }
+.bb__notice, .bb__group-note, .bb__empty { padding: .75rem 1rem; border: 1px dashed currentColor; border-radius: 6px; }
+.bb__group { border: 0; margin: 0 0 2rem; padding: 0; min-width: 0; }
+.bb__legend { font-weight: 600; font-size: 1.1em; margin-bottom: .75rem; padding: 0; display: flex; align-items: center; gap: .5rem; }
+.bb__step { display: inline-grid; place-items: center; width: 1.6rem; height: 1.6rem; border-radius: 50%; border: 1px solid currentColor; font-size: .85em; }
+.bb__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+@media (min-width: 750px) { .bb__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 990px) { .bb__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.bb-card { position: relative; display: flex; flex-direction: column; gap: .4rem; }
+.bb-card__label { display: block; cursor: pointer; }
+/* Visually hidden but focusable: native radio gives arrow-key navigation + a11y for free. */
+.bb-card__input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; }
+.bb-card__body { display: flex; flex-direction: column; gap: .25rem; height: 100%; padding: .5rem; border: 2px solid rgba(128, 128, 128, .35); border-radius: 8px; }
+.bb-card__input:checked + .bb-card__body { border-color: currentColor; box-shadow: 0 0 0 1px currentColor; }
+.bb-card__input:focus-visible + .bb-card__body { outline: 3px solid currentColor; outline-offset: 2px; }
+.bb-card__img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 4px; }
+.bb-card__img--empty { display: block; background: rgba(128, 128, 128, .2); }
+.bb-card__title { font-size: .95em; line-height: 1.3; }
+.bb-card__price { font-weight: 600; }
+.bb-card__badge { align-self: flex-start; padding: .1rem .5rem; border: 1px solid currentColor; border-radius: 99px; font-size: .75em; }
+.bb-card.is-sold-out .bb-card__body { opacity: .55; cursor: not-allowed; }
+.bb-card.is-sold-out .bb-card__label { cursor: not-allowed; }
+.bb-card__select { width: 100%; min-height: 2.5rem; }
+
+.bb__summary { position: sticky; bottom: 0; padding: 1rem 0; background: Canvas; border-top: 1px solid rgba(128, 128, 128, .5); }
+.bb__progress { margin: 0 0 .25rem; font-weight: 600; }
+.bb__lines { margin: 0 0 .5rem; padding-left: 1.1rem; }
+.bb__prices { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem; margin: 0 0 .75rem; }
+.bb__total { font-size: 1.5em; }
+.bb__save { font-size: .9em; opacity: .8; }
+.bb__button { min-height: 2.75rem; width: 100%; }
+@media (min-width: 750px) { .bb__button { width: auto; min-width: 16rem; } }
+.bb__button[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+.bb__button.is-loading { cursor: progress; opacity: .8; }
+.bb__status, .bb__error { margin: .5rem 0 0; min-height: 1.25rem; }
+.bb__error { font-weight: 600; }
+.bb__error::before { content: "⚠ "; }
+@media (prefers-reduced-motion: no-preference) { .bb-card__body { transition: border-color .15s, box-shadow .15s; } }
