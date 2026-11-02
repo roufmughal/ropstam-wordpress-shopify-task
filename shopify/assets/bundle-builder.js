@@ -43,6 +43,7 @@
 				lines: this.querySelector( '[data-bb-lines]' ),
 				total: this.querySelector( '[data-bb-total]' ),
 				compare: this.querySelector( '[data-bb-compare]' ),
+				save: this.querySelector( '[data-bb-save]' ),
 				submit: this.querySelector( '[data-bb-submit]' ),
 				reset: this.querySelector( '[data-bb-reset]' ),
 				label: this.querySelector( '[data-bb-label]' ),
@@ -153,6 +154,14 @@
 			this.form.querySelectorAll( 'fieldset' ).forEach( function ( f ) { f.disabled = on; } );
 		}
 
+		disableDiscountDisplay() {
+			this.discount = 0;
+			if ( this.el.save ) {
+				this.el.save.hidden = true;
+			}
+			this.update();
+		}
+
 		async onSubmit( event ) {
 			event.preventDefault();
 			if ( this.busy ) {
@@ -204,11 +213,15 @@
 				}
 				if ( this.dataset.discountCode ) {
 					try {
-						await fetch( '/discount/' + encodeURIComponent( this.dataset.discountCode ), {
+						var discountResponse = await fetch( '/discount/' + encodeURIComponent( this.dataset.discountCode ), {
 							credentials: 'same-origin',
 						} );
+						if ( ! discountResponse.ok ) {
+							this.disableDiscountDisplay();
+						}
 					} catch ( e ) {
 						// A discount endpoint failure must not undo a successful cart add.
+						this.disableDiscountDisplay();
 					}
 				}
 				this.dispatchEvent( new CustomEvent( 'bundle-builder:added', { bubbles: true, detail: { bundleId: bundleId, items: data.items } } ) );
