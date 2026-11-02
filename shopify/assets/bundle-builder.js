@@ -111,8 +111,9 @@
 			var chosen = sel.filter( Boolean );
 			var complete = chosen.length === sel.length;
 			var subtotal = chosen.reduce( function ( sum, s ) { return sum + s.price; }, 0 );
+			var discount = this.discount;
 			var total = chosen.reduce( function ( sum, s ) {
-				return sum + Math.round( ( s.price * ( 100 - this.discount ) ) / 100 );
+				return sum + Math.round( ( s.price * ( 100 - discount ) ) / 100 );
 			}, 0 );
 
 			this.el.progress.textContent = chosen.length + ' of ' + sel.length + ' selected';
