@@ -113,6 +113,7 @@ function ras_render_calculator( $heading = '' ) {
 	$uid     = wp_unique_id( 'ras-calc-' );
 	$addons  = ras_get_addons();
 	$heading = '' !== $heading ? $heading : __( 'Estimate your price', 'ropstam-services' );
+	$initial_days = max( 1, (int) $services[0]['days'] );
 	$config  = array(
 		'currency' => apply_filters( 'ras_currency', 'USD' ),
 		'locale'   => str_replace( '_', '-', determine_locale() ),
@@ -157,7 +158,7 @@ function ras_render_calculator( $heading = '' ) {
 
 		<div class="ras-calc__result" aria-live="polite" aria-atomic="true">
 			<p><?php esc_html_e( 'Estimated price:', 'ropstam-services' ); ?> <output data-ras-total><?php echo esc_html( ras_format_price( $services[0]['price'] ) ); ?></output></p>
-			<p><?php esc_html_e( 'Estimated delivery:', 'ropstam-services' ); ?> <span data-ras-days><?php echo esc_html( max( 1, $services[0]['days'] ) ); ?></span></p>
+			<p><?php esc_html_e( 'Estimated delivery:', 'ropstam-services' ); ?> <span data-ras-days><?php echo esc_html( sprintf( _n( '%d day', '%d days', $initial_days, 'ropstam-services' ), $initial_days ) ); ?></span></p>
 		</div>
 	</section>
 	<?php
