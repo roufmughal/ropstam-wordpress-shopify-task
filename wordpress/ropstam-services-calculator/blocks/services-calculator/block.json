@@ -1,0 +1,15 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "ropstam/services-calculator",
+	"title": "Services Price Calculator",
+	"category": "widgets",
+	"icon": "calculator",
+	"description": "Shows the 3 most recently updated services with a live add-on price calculator.",
+	"textdomain": "ropstam-services",
+	"attributes": {
+		"heading": { "type": "string", "default": "" }
+	},
+	"supports": { "html": false, "align": [ "wide", "full" ] },
+	"editorScript": "ras-block-editor"
+}
