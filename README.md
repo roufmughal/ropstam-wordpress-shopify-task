@@ -63,7 +63,7 @@ Then in **Online Store → Pages** create a page and assign the *page.bundle-bui
 |---|---|
 | Section with schema, up to 3 collections/lists | `collection_1..3` and `product_list_1..3` (list overrides collection), group labels, products per group, discount %, button label, redirect toggle |
 | Pick 1 per group | One native radio group (`fieldset` + `legend`) per group; variant `<select>` for multi-variant products |
-| Live bundle price + `/cart/add.js` | `bundle-builder.js` sums selected variants, applies the display discount, and POSTs **one request with `items: [3 lines]}`** to `routes.cart_add_url + '.js'` (atomic: all 3 or none) |
+| Live bundle price + `/cart/add.js` | `bundle-builder.js` sums selected variants, applies the display discount, and POSTs **one request with `{ items: [3 lines] }`** to `routes.cart_add_url + '.js'` (atomic: all 3 or none) |
 | Line item properties | `Bundle` (visible, e.g. "3-Pack Bundle #a1b2c3"), `_bundle_id` (hidden, UUID), `_bundle_group` (hidden) link the three lines |
 | Stock / loading states, no reload | Sold-out products disabled + badge; sold-out variants disabled; group-level "all sold out" note; button `aria-busy` + "Adding…", fieldsets disabled while in flight; API errors (incl. 422 stock) and network failures shown in a `role="alert"` region |
 | Lean | Vanilla JS custom element (re-inits correctly in the theme editor), separate CSS file, no libraries |
