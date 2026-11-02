@@ -1,0 +1,14 @@
+.ras-calc { max-width: 40rem; padding: 1.25rem; border: 1px solid currentColor; border-radius: 8px; }
+.ras-calc__title { margin-top: 0; }
+.ras-calc__fieldset { border: 0; margin: 0 0 1rem; padding: 0; }
+.ras-calc__fieldset legend { font-weight: 600; margin-bottom: .5rem; padding: 0; }
+.ras-calc__option { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; padding: .6rem .75rem; margin-bottom: .4rem; border: 1px solid rgba(128, 128, 128, .5); border-radius: 6px; cursor: pointer; }
+.ras-calc__option:focus-within { outline: 2px solid currentColor; outline-offset: 2px; }
+.ras-calc__option input { width: 1.1rem; height: 1.1rem; margin: 0; }
+.ras-calc__name { flex: 1 1 10rem; }
+.ras-calc__meta { opacity: .8; font-size: .9em; }
+.ras-calc__result { padding-top: .75rem; border-top: 1px solid rgba(128, 128, 128, .5); }
+.ras-calc__result p { margin: .25rem 0; }
+.ras-calc__result output { font-size: 1.4em; font-weight: 700; }
+@media (max-width: 480px) { .ras-calc { padding: .9rem; } }
+@media (prefers-reduced-motion: no-preference) { .ras-calc__option { transition: background-color .15s; } }
