@@ -80,10 +80,10 @@ Then in **Online Store → Pages** create a page and assign the *page.bundle-bui
 - Strings in the JS/Liquid are English; move to `locales/*.json` for a multi-language store.
 
 ### Discount setup and limitations
-- This implementation uses a **discount-code fallback**. Create a Shopify code (for example `BUNDLE10`) for the same percentage as the section's **Bundle discount (%)** setting, require at least 3 eligible items, and limit eligible products to the three builder collections. Enter the code in the section's **Shopify discount code** setting. The page shows the discounted estimate only when a code is configured; the code is applied after a successful cart add.
+- This implementation uses a **discount-code fallback**. Create a Shopify code (for example `BUNDLE10`) for the same percentage as the section's **Bundle discount (%)** setting, require at least 3 eligible items, and limit eligible products to the three builder collections. Enter the code in the section's **Shopify discount code** setting. The page shows the discounted estimate only when a code is configured; with the setting blank (the default), it shows the regular price. The code is applied after a successful cart add.
 - If the discount request fails at the network or HTTP level, the cart add remains successful and the builder stops showing a discounted estimate. Keep the code active and verify the cart/checkout price when changing its configuration.
 - The fallback applies to any 3 eligible items in the cart, including eligible items added outside the builder; it cannot verify that the three lines share a `_bundle_id`. Removing one item from a single bundle drops below the minimum, but other eligible cart items can still satisfy the quantity.
-- The exact bundle-only solution is a Shopify Discount Function that groups cart lines by `_bundle_id` and discounts only complete three-line bundles. Custom-app Function eligibility depends on the store plan/type. It could not be verified because Shopify admin access was unavailable for this implementation, so no Function extension is included.
+- The exact bundle-only solution is a Shopify Discount Function that groups cart lines by `_bundle_id` and discounts only complete three-line bundles. Custom-app Functions are available only on eligible Partner development stores or Shopify Plus. This store's eligibility could not be verified because Shopify admin access was unavailable, so no Function extension is included.
 - Zero-decimal currencies (e.g. JPY) would need the `/100` in `bundle-builder.js` adjusted.
 - Products per group are capped by the `products_per_group` setting (max 12) to keep the DOM small.
 
@@ -93,6 +93,7 @@ Then in **Online Store → Pages** create a page and assign the *page.bundle-bui
 - [ ] WP: edit a service, "recently updated" order changes; price/escaping with `<script>` in title is inert
 - [ ] WP: keyboard only, Tab/Arrow/Space toggles; total announced politely
 - [ ] Shopify: sold-out product not selectable; sold-out variant not selectable
+- [ ] Shopify: keyboard-only selection, visible focus on radios/selects/buttons, and reset returns to zero selected
 - [ ] Shopify: pick one item from each group → Add → three cart lines share the visible bundle marker and configured discount is reflected in cart
 - [ ] Shopify: offline → error message shown
 - [ ] Both at 375px width, no horizontal scroll
