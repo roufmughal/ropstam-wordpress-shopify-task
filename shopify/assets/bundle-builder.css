@@ -24,6 +24,7 @@
 .bb-card.is-sold-out .bb-card__body { opacity: .55; cursor: not-allowed; }
 .bb-card.is-sold-out .bb-card__label { cursor: not-allowed; }
 .bb-card__select { width: 100%; min-height: 2.5rem; }
+.bb-card__select:focus-visible, .bb__button:focus-visible, .bb__reset:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
 
 .bb__summary { position: sticky; bottom: 0; padding: 1rem 0; background: Canvas; border-top: 1px solid rgba(128, 128, 128, .5); }
 .bb__progress { margin: 0 0 .25rem; font-weight: 600; }
@@ -32,6 +33,7 @@
 .bb__total { font-size: 1.5em; }
 .bb__save { font-size: .9em; opacity: .8; }
 .bb__button { min-height: 2.75rem; width: 100%; }
+.bb__reset { margin-top: .5rem; }
 @media (min-width: 750px) { .bb__button { width: auto; min-width: 16rem; } }
 .bb__button[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
 .bb__button.is-loading { cursor: progress; opacity: .8; }
