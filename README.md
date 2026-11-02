@@ -7,9 +7,14 @@ One repo, two independent deliverables:
 | `wordpress/ropstam-services-calculator/` | Plugin: Services CPT + dynamic block / shortcode with a live add-on calculator |
 | `shopify/` | Online Store 2.0 section `bundle-builder.liquid` + its JS/CSS assets |
 
-**Demo links** (fill in before sending)
-- WordPress: `<url>` (admin: `<user>` / `<pass>`)
-- Shopify dev store: `<url>` (storefront password: `<pass>`)
+## Live demos
+
+- WordPress Services Price Calculator: <https://darkslateblue-worm-210361.hostingersite.com/services-calculator/>
+- Shopify bundle builder preview: <https://sea0ri-tt.myshopify.com/pages/build-a-demo-bundle?preview_theme_id=194482471188>
+
+The Shopify storefront is password-protected. Its password is shared separately and is intentionally not stored in this repository. The bundle builder is in an unpublished Dawn-based theme preview; the store's existing Horizon theme remains unchanged.
+
+The live Shopify demo contains three sample products (Rs. 2,500, Rs. 1,500, and Rs. 1,200). Selecting one from each group displays a Rs. 5,200 subtotal and Rs. 4,680 after the 10% display-only discount. Adding the bundle creates three cart lines with a shared visible bundle marker. The discount is not applied at checkout; see the limitation below.
 
 ---
 
@@ -85,5 +90,6 @@ Then in **Online Store → Pages** create a page and assign the *page.bundle-bui
 - [ ] WP: edit a service, "recently updated" order changes; price/escaping with `<script>` in title is inert
 - [ ] WP: keyboard only, Tab/Arrow/Space toggles; total announced politely
 - [ ] Shopify: sold-out product not selectable; sold-out variant not selectable
-- [ ] Shopify: pick 3 → Add → 3 cart lines share `_bundle_id`; offline → error message shown
+- [x] Shopify: pick one item from each group → Add → three cart lines share the visible bundle marker
+- [ ] Shopify: offline → error message shown
 - [ ] Both at 375px width, no horizontal scroll

@@ -1,6 +1,23 @@
 {
   "sections": {
-    "main": { "type": "bundle-builder", "settings": {} }
+    "main": {
+      "type": "bundle-builder",
+      "settings": {
+        "heading": "Build your Ropstam demo bundle",
+        "subheading": "Choose one item from each group to see your bundle total.",
+        "bundle_name": "Ropstam Demo Bundle",
+        "label_1": "Apparel",
+        "collection_1": "bundle-group-1-apparel",
+        "label_2": "Accessories",
+        "collection_2": "bundle-group-2-accessories",
+        "label_3": "Drinkware",
+        "collection_3": "bundle-group-3-drinkware",
+        "products_per_group": 3,
+        "discount_percent": 10,
+        "button_label": "Add demo bundle to cart",
+        "redirect_to_cart": false
+      }
+    }
   },
   "order": [ "main" ]
 }
