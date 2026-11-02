@@ -9,6 +9,11 @@
 
 {%- liquid
   assign configured = 0
+  assign discount_code = section.settings.discount_code | strip
+  assign display_discount = section.settings.discount_percent
+  if discount_code == blank
+    assign display_discount = 0
+  endif
   for i in (1..3)
     assign col_key = 'collection_' | append: i
     assign list_key = 'product_list_' | append: i
@@ -25,7 +30,8 @@
   data-cart-url="{{ routes.cart_url }}"
   data-currency="{{ cart.currency.iso_code }}"
   data-locale="{{ request.locale.iso_code }}"
-  data-discount="{{ section.settings.discount_percent }}"
+  data-discount="{{ display_discount }}"
+  data-discount-code="{{ discount_code | escape }}"
   data-redirect="{{ section.settings.redirect_to_cart }}"
   data-bundle-name="{{ section.settings.bundle_name | escape }}"
 >
@@ -129,14 +135,15 @@
           <p class="bb__prices">
             <s class="bb__compare" data-bb-compare hidden></s>
             <strong class="bb__total" data-bb-total>—</strong>
-            {%- if section.settings.discount_percent > 0 -%}
+            {%- if display_discount > 0 -%}
               <span class="bb__save">Bundle price: {{ section.settings.discount_percent }}% off</span>
             {%- endif -%}
           </p>
           <button type="submit" class="bb__button button" data-bb-submit aria-disabled="true">
             <span data-bb-label>{{ section.settings.button_label | escape }}</span>
           </button>
-          <p class="bb__status" data-bb-status role="status"></p>
+          <button type="button" class="bb__reset button button--secondary" data-bb-reset>Reset selection</button>
+          <p class="bb__status" data-bb-status role="status" aria-live="polite"></p>
           <p class="bb__error" data-bb-error role="alert" hidden></p>
         </div>
       </form>
@@ -171,7 +178,8 @@
 
     { "type": "header", "content": "Options" },
     { "type": "range", "id": "products_per_group", "label": "Products per group", "min": 3, "max": 12, "step": 1, "default": 6 },
-    { "type": "range", "id": "discount_percent", "label": "Bundle discount (%)", "min": 0, "max": 30, "step": 5, "default": 10, "info": "Display only. Apply the real discount with an automatic discount or Shopify Function (see README)." },
+    { "type": "range", "id": "discount_percent", "label": "Bundle discount (%)", "min": 0, "max": 30, "step": 5, "default": 10, "info": "Must match the percentage configured for the discount code below. The discounted price is shown only when a code is set." },
+    { "type": "text", "id": "discount_code", "label": "Shopify discount code", "default": "", "info": "Create this code in Shopify Discounts. Set its percentage to match the bundle discount above." },
     { "type": "text", "id": "button_label", "label": "Button label", "default": "Add bundle to cart" },
     { "type": "checkbox", "id": "redirect_to_cart", "label": "Go to cart after adding", "default": false }
   ],

@@ -44,6 +44,7 @@
 				total: this.querySelector( '[data-bb-total]' ),
 				compare: this.querySelector( '[data-bb-compare]' ),
 				submit: this.querySelector( '[data-bb-submit]' ),
+				reset: this.querySelector( '[data-bb-reset]' ),
 				label: this.querySelector( '[data-bb-label]' ),
 				status: this.querySelector( '[data-bb-status]' ),
 				error: this.querySelector( '[data-bb-error]' ),
@@ -58,6 +59,7 @@
 
 			this.form.addEventListener( 'change', this.onChange.bind( this ) );
 			this.form.addEventListener( 'submit', this.onSubmit.bind( this ) );
+			this.el.reset.addEventListener( 'click', this.onReset.bind( this ) );
 			this.update();
 		}
 
@@ -97,12 +99,20 @@
 			this.update();
 		}
 
+		onReset() {
+			this.form.reset();
+			this.clearMessages();
+			this.update();
+		}
+
 		update() {
 			var sel = this.selections();
 			var chosen = sel.filter( Boolean );
 			var complete = chosen.length === sel.length;
 			var subtotal = chosen.reduce( function ( sum, s ) { return sum + s.price; }, 0 );
-			var total = Math.round( ( subtotal * ( 100 - this.discount ) ) / 100 );
+			var total = chosen.reduce( function ( sum, s ) {
+				return sum + Math.round( ( s.price * ( 100 - this.discount ) ) / 100 );
+			}, 0 );
 
 			this.el.progress.textContent = chosen.length + ' of ' + sel.length + ' selected';
 			this.el.lines.textContent = '';
@@ -138,6 +148,7 @@
 			this.busy = on;
 			this.el.submit.setAttribute( 'aria-busy', on ? 'true' : 'false' );
 			this.el.submit.classList.toggle( 'is-loading', on );
+			this.el.reset.disabled = on;
 			this.el.label.textContent = on ? MSG.adding : this.idleLabel;
 			this.form.querySelectorAll( 'fieldset' ).forEach( function ( f ) { f.disabled = on; } );
 		}
@@ -190,6 +201,15 @@
 					// Shopify returns { status, message, description }; 422 = not enough stock.
 					this.showError( data.description || data.message || MSG.generic );
 					return;
+				}
+				if ( this.dataset.discountCode ) {
+					try {
+						await fetch( '/discount/' + encodeURIComponent( this.dataset.discountCode ), {
+							credentials: 'same-origin',
+						} );
+					} catch ( e ) {
+						// A discount endpoint failure must not undo a successful cart add.
+					}
 				}
 				this.dispatchEvent( new CustomEvent( 'bundle-builder:added', { bubbles: true, detail: { bundleId: bundleId, items: data.items } } ) );
 				if ( this.dataset.redirect === 'true' ) {
