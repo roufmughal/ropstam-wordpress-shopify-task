@@ -10,11 +10,11 @@ One repo, two independent deliverables:
 ## Live demos
 
 - WordPress Services Price Calculator: <https://darkslateblue-worm-210361.hostingersite.com/services-calculator/>
-- Shopify bundle builder preview: <https://sea0ri-tt.myshopify.com/pages/build-a-demo-bundle?preview_theme_id=194482471188>
+- Shopify bundle builder: <https://sea0ri-tt.myshopify.com/pages/build-a-demo-bundle>
 
-The Shopify storefront is password-protected. Its password is shared separately and is intentionally not stored in this repository. The bundle builder is in an unpublished Dawn-based theme preview; the store's existing Horizon theme remains unchanged.
+The Shopify storefront is password-protected. Do not store storefront or admin credentials in this repository.
 
-The live Shopify demo contains three sample products (Rs. 2,500, Rs. 1,500, and Rs. 1,200). Selecting one from each group displays a Rs. 5,200 subtotal and Rs. 4,680 after the 10% display-only discount. Adding the bundle creates three cart lines with a shared visible bundle marker. The discount is not applied at checkout; see the limitation below.
+The Shopify demo uses a Dawn-based theme. Select one item in each group to add three cart lines with a shared visible bundle marker.
 
 ---
 
@@ -61,14 +61,14 @@ cp -r ../shopify/templates/* templates/
 shopify theme dev --store <your-store>.myshopify.com        # live preview
 shopify theme push --unpublished --store <your-store>.myshopify.com   # shareable preview
 ```
-Then in **Online Store → Pages** create a page and assign the *page.bundle-builder* template (or add the **Bundle builder** section to any template in the theme editor). In section settings pick a collection **or** a product list for each of the 3 groups.
+Then in **Online Store → Pages** create a page and assign the *page.bundle-builder* template (or add the **Bundle builder** section to any template in the theme editor). In section settings pick a collection **or** a product list for each of the 3 groups. See [shopify/DEMO-SETUP.md](./shopify/DEMO-SETUP.md) for demo catalog and discount configuration.
 
 ### How it maps to the brief
 | Requirement | Implementation |
 |---|---|
 | Section with schema, up to 3 collections/lists | `collection_1..3` and `product_list_1..3` (list overrides collection), group labels, products per group, discount %, button label, redirect toggle |
 | Pick 1 per group | One native radio group (`fieldset` + `legend`) per group; variant `<select>` for multi-variant products |
-| Live bundle price + `/cart/add.js` | `bundle-builder.js` sums selected variants, applies the display discount, and POSTs **one request with `{ items: [3 lines] }`** to `routes.cart_add_url + '.js'` (atomic: all 3 or none) |
+| Live bundle price + `/cart/add.js` | `bundle-builder.js` sums selected variants and POSTs **one request with `{ items: [3 lines] }`** to `routes.cart_add_url + '.js'` (atomic: all 3 or none). It then applies the configured discount code through Shopify's same-origin `/discount/<code>` endpoint. |
 | Line item properties | `Bundle` (visible, e.g. "3-Pack Bundle #a1b2c3"), `_bundle_id` (hidden, UUID), `_bundle_group` (hidden) link the three lines |
 | Stock / loading states, no reload | Sold-out products disabled + badge; sold-out variants disabled; group-level "all sold out" note; button `aria-busy` + "Adding…", fieldsets disabled while in flight; API errors (incl. 422 stock) and network failures shown in a `role="alert"` region |
 | Lean | Vanilla JS custom element (re-inits correctly in the theme editor), separate CSS file, no libraries |
@@ -79,8 +79,11 @@ Then in **Online Store → Pages** create a page and assign the *page.bundle-bui
 - Money handled as minor units (`variant.price`) and formatted with `Intl.NumberFormat` using the shop currency/locale.
 - Strings in the JS/Liquid are English; move to `locales/*.json` for a multi-language store.
 
-### Limitations / assumptions
-- **The bundle discount is display-only.** `/cart/add.js` cannot set prices. To actually charge the discounted price, add an automatic discount or a Shopify Function (Discount Function) that matches lines with the `_bundle_id` property (3 lines sharing one id).
+### Discount setup and limitations
+- This implementation uses a **discount-code fallback**. Create a Shopify code (for example `BUNDLE10`) for the same percentage as the section's **Bundle discount (%)** setting, require at least 3 eligible items, and limit eligible products to the three builder collections. Enter the code in the section's **Shopify discount code** setting. The page shows the discounted estimate only when a code is configured; the code is applied after a successful cart add.
+- If the discount request fails at the network or HTTP level, the cart add remains successful and the builder stops showing a discounted estimate. Keep the code active and verify the cart/checkout price when changing its configuration.
+- The fallback applies to any 3 eligible items in the cart, including eligible items added outside the builder; it cannot verify that the three lines share a `_bundle_id`. Removing one item from a single bundle drops below the minimum, but other eligible cart items can still satisfy the quantity.
+- The exact bundle-only solution is a Shopify Discount Function that groups cart lines by `_bundle_id` and discounts only complete three-line bundles. Custom-app Function eligibility depends on the store plan/type. It could not be verified because Shopify admin access was unavailable for this implementation, so no Function extension is included.
 - Zero-decimal currencies (e.g. JPY) would need the `/100` in `bundle-builder.js` adjusted.
 - Products per group are capped by the `products_per_group` setting (max 12) to keep the DOM small.
 
@@ -90,6 +93,6 @@ Then in **Online Store → Pages** create a page and assign the *page.bundle-bui
 - [ ] WP: edit a service, "recently updated" order changes; price/escaping with `<script>` in title is inert
 - [ ] WP: keyboard only, Tab/Arrow/Space toggles; total announced politely
 - [ ] Shopify: sold-out product not selectable; sold-out variant not selectable
-- [x] Shopify: pick one item from each group → Add → three cart lines share the visible bundle marker
+- [ ] Shopify: pick one item from each group → Add → three cart lines share the visible bundle marker and configured discount is reflected in cart
 - [ ] Shopify: offline → error message shown
 - [ ] Both at 375px width, no horizontal scroll
